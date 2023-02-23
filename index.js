@@ -1,19 +1,28 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 // Middleware 
-app.use(express.json())
+app.use(express.json()) // Parse JSON data in the request body
+// app.use(morgan('tiny')) // HTTP request logger
 
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:  ', request.path)
-  console.log('Body:  ', request.body)
-  console.log('---')
-  next()
-}
+morgan.token('body', function (req) {
+  return JSON.stringify(req.body)
+})
 
-app.use(requestLogger)
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body")) // Custom HTTP request logger
 
+
+// Custom middleware
+// const requestLogger = (request, response, next) => {
+//   console.log('Method:', request.method)
+//   console.log('Path:  ', request.path)
+//   console.log('Body:  ', request.body)
+//   console.log('---')
+//   next()
+// }
+
+// app.use(requestLogger)
 
 let persons = [
   { 
