@@ -1,8 +1,10 @@
 const express = require('express')
+const cors = require('cors')
 const morgan = require('morgan')
 const app = express()
 
 // Middleware 
+app.use(cors()) // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json()) // Parse JSON data in the request body
 // app.use(morgan('tiny')) // HTTP request logger
 
