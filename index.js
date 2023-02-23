@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+// Middleware to handle JSON data
+app.use(express.json())
+
 let persons = [
   { 
     "id": 1,
@@ -24,10 +27,20 @@ let persons = [
   }
 ]
 
+// Root route
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
 
+// Info route
+app.get('/info', (request, response) => {
+  const date = new Date()
+  const info = `<p>Phonebook has info for ${persons.length} people</p>
+                <p>${date}</p>`
+  response.send(info)
+})
+
+// Fetch all resources in the collection
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
