@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const app = express()
 
 // Middleware 
+app.use(express.static('build')) // Serve static files from the build folder
 app.use(cors()) // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json()) // Parse JSON data in the request body
 // app.use(morgan('tiny')) // HTTP request logger
@@ -59,7 +60,7 @@ let persons = [
   }
 ]
 
-// Root route
+// Root route (Overriden by build middleware which serves index.html)
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
