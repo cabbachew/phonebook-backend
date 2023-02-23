@@ -103,7 +103,7 @@ app.get('/api/persons/:id', (request, response) => {
 // Generate a new id (random number between 1 and 1000000)
 const generateId = () => {
   // From: Math.floor(Math.random() * (max - min + 1)) + min
-  return Math.floor(Math.random() * 4) + 1 // Inclusive of maximum
+  return Math.floor(Math.random() * 1000000) + 1 // Inclusive of maximum
 }
 
 // Create a new resource in the collection
