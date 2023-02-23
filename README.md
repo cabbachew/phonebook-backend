@@ -1,3 +1,3 @@
 # FSO Part 3: Phonebook Backend
 
-This is a dedicated repository for the exercises of the [Full Stack Open](https://fullstackopen.com/en/) course, Part 3: [Programming a server with NodeJS and Express](https://fullstackopen.com/en/part3).
+A RESTful API for a phonebook application built using NodeJS and Express. It is deployed to [Render](https://www.render.com/) and can be found [here](https://phonebook-backend-mkzf.onrender.com/). The backend also statically serves the production build of the [frontend](https://github.com/cabbachew/fullstackopen/tree/main/part2/phonebook). This application was built to fulfill the requirements of the [Full Stack Open](https://fullstackopen.com/en/) course, Part 3: [Programming a server with NodeJS and Express](https://fullstackopen.com/en/part3).
