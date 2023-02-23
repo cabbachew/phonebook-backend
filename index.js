@@ -24,6 +24,11 @@ let persons = [
     "id": 4,
     "name": "Mary Poppendieck", 
     "number": "39-23-6423122"
+  },
+  {
+    "id": 5,
+    "name": "John Doe",
+    "number": "123-456-7890"
   }
 ]
 
@@ -57,6 +62,14 @@ app.get('/api/persons/:id', (request, response) => {
     response.statusMessage = `Person with id ${id} not found`
     response.status(404).end()
   }
+})
+
+// Delete a single resource in the collection
+app.delete('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  persons = persons.filter(person => person.id !== id)
+
+  response.status(204).end()
 })
 
 const PORT = 3001
