@@ -64,11 +64,61 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
+// Generate a new id (increment the max id by 1)
+// const generateId = () => {
+//   const maxId = persons.length > 0
+//     ? Math.max(...persons.map(p => p.id))
+//     : 0
+//   return maxId + 1
+// }
+
+// Generate a new id (random number between 1 and 1000000)
+const generateId = () => {
+  // From: Math.floor(Math.random() * (max - min + 1)) + min
+  return Math.floor(Math.random() * 4) + 1 // Inclusive of maximum
+}
+
+// Create a new resource in the collection
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  
+  // Check for missing name
+  if (!body.name) {
+    return response.status(400).json({
+      error: 'name missing'
+    })
+  }
+  // Check for missing number
+  else if (!body.number) {
+    return response.status(400).json({
+      error: 'number missing'
+    })
+  }
+  // Check for duplicate name
+  else if (persons.find(person => person.name === body.name)) {
+    return response.status(400).json({
+      error: 'name must be unique'
+    })
+  }
+
+  const person = {
+    id: generateId(), // Currently not checking for duplicates
+    name: body.name,
+    number: body.number
+  }
+
+  persons = persons.concat(person)
+
+  response.json(person)
+})
+
+
 // Delete a single resource in the collection
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
 
+  // Could return 404 if resource not found but use 204 in all cases
   response.status(204).end()
 })
 
