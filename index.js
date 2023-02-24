@@ -162,13 +162,36 @@ app.post('/api/persons', (request, response) => {
   }
 })
 
+// Update a single resource in the collection
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true }) // new: true returns the updated object
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
 // Delete a single resource in the collection
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      // Return 204 No Content whether or not resource was found
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+      
+  // const id = Number(request.params.id)
+  // persons = persons.filter(person => person.id !== id)
 
   // Could return 404 if resource not found but use 204 in all cases
-  response.status(204).end()
+  // response.status(204).end()
 })
 
 // Middleware if no route handler matches the request
