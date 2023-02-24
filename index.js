@@ -85,9 +85,19 @@ app.get('/api/persons', (request, response) => {
 
 // Fetch a single resource in the collection
 app.get('/api/persons/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => {
-    response.json(person)
-  })
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      // response.status(504).end()
+      response.status(400).send({ error: 'malformatted id' })
+    })
 
   // const id = Number(request.params.id)
   // const person = persons.find(person => person.id === id)
@@ -136,19 +146,19 @@ app.post('/api/persons', (request, response) => {
     return response.status(400).json({
       error: 'name must be unique'
     })
+  } else {
+    const person = new Person({
+      // id: generateId(), // Currently not checking for duplicates
+      name: body.name,
+      number: body.number
+    })
+
+    // persons = persons.concat(person)
+
+    person.save().then(savedPerson => {
+      response.json(savedPerson)
+    })
   }
-
-  const person = new Person({
-    // id: generateId(), // Currently not checking for duplicates
-    name: body.name,
-    number: body.number
-  })
-
-  // persons = persons.concat(person)
-
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
 })
 
 // Delete a single resource in the collection
