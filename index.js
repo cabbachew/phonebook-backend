@@ -134,15 +134,17 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const person = {
-    id: generateId(), // Currently not checking for duplicates
+  const person = new Person({
+    // id: generateId(), // Currently not checking for duplicates
     name: body.name,
     number: body.number
-  }
+  })
 
-  persons = persons.concat(person)
+  // persons = persons.concat(person)
 
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 
