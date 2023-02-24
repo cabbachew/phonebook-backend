@@ -1,7 +1,10 @@
+require ('dotenv').config()
 const express = require('express')
+const app = express() // Create an Express application
+const Person = require('./models/person')
+
 const cors = require('cors')
 const morgan = require('morgan')
-const app = express()
 
 // Middleware 
 app.use(express.static('build')) // Serve static files from the build folder
@@ -14,7 +17,6 @@ morgan.token('body', function (req) {
 })
 
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body")) // Custom HTTP request logger
-
 
 // Custom middleware
 // const requestLogger = (request, response, next) => {
@@ -75,7 +77,10 @@ app.get('/info', (request, response) => {
 
 // Fetch all resources in the collection
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  // response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 // Fetch a single resource in the collection
