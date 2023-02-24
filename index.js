@@ -84,7 +84,7 @@ app.get('/api/persons', (request, response) => {
 })
 
 // Fetch a single resource in the collection
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
       if (person) {
@@ -93,11 +93,12 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
       }
     })
-    .catch(error => {
-      console.log(error)
-      // response.status(504).end()
-      response.status(400).send({ error: 'malformatted id' })
-    })
+    .catch(error => next(error))
+    // .catch(error => {
+    //   console.log(error)
+    //   // response.status(504).end()
+    //   response.status(400).send({ error: 'malformatted id' })
+    // })
 
   // const id = Number(request.params.id)
   // const person = persons.find(person => person.id === id)
@@ -176,6 +177,19 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+// Must be the last loaded middleware
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001 // Use environment variable or default to 3001
 app.listen(PORT, () => {
