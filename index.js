@@ -85,16 +85,20 @@ app.get('/api/persons', (request, response) => {
 
 // Fetch a single resource in the collection
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find(person => person.id === id)
-
-  if (person) {
+  Person.findById(request.params.id).then(person => {
     response.json(person)
-  }
-  else {
-    response.statusMessage = `Person with id ${id} not found`
-    response.status(404).end()
-  }
+  })
+
+  // const id = Number(request.params.id)
+  // const person = persons.find(person => person.id === id)
+
+  // if (person) {
+  //   response.json(person)
+  // }
+  // else {
+  //   response.statusMessage = `Person with id ${id} not found`
+  //   response.status(404).end()
+  // }
 })
 
 // Generate a new id (increment the max id by 1)
@@ -127,7 +131,7 @@ app.post('/api/persons', (request, response) => {
       error: 'number missing'
     })
   }
-  // Check for duplicate name
+  // Check for duplicate
   else if (persons.find(person => person.name === body.name)) {
     return response.status(400).json({
       error: 'name must be unique'
@@ -146,7 +150,6 @@ app.post('/api/persons', (request, response) => {
     response.json(savedPerson)
   })
 })
-
 
 // Delete a single resource in the collection
 app.delete('/api/persons/:id', (request, response) => {
