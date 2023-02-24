@@ -70,9 +70,17 @@ app.get('/', (request, response) => {
 // Info route
 app.get('/info', (request, response) => {
   const date = new Date()
-  const info = `<p>Phonebook has info for ${persons.length} people</p>
-                <p>${date}</p>`
-  response.send(info)
+  // Model.count() is deprecated
+  Person.countDocuments({}).then(count => {
+    response.send(`
+      <p>Phonebook has info for ${count} people</p>
+      <p>${date}</p>
+    `)
+  })
+  //   const date = new Date()
+  //   const info = `<p>Phonebook has info for ${persons.length} people</p>
+  //                 <p>${date}</p>`
+  //   response.send(info)
 })
 
 // Fetch all resources in the collection
