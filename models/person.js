@@ -16,8 +16,12 @@ mongoose.connect(url)
 
 // Schema defines the shape of the documents in the collection
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    required: true,
+    minlength: 3
+  },
+  number: String
 });
 
 personSchema.set('toJSON', {
