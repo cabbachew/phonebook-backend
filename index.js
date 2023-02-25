@@ -146,7 +146,12 @@ app.put('/api/persons/:id', (request, response, next) => {
     { new: true, runValidators: true, context: 'query' } // Return updated person and run validators
   )
     .then(updatedPerson => {
-      response.json(updatedPerson)
+      if (updatedPerson) {
+        response.json(updatedPerson)
+      } else {
+        // Match structure of errors returned by validators
+        response.status(404).json({ error: 'Person not found' })
+      }
     })
     .catch(error => next(error))
 })
