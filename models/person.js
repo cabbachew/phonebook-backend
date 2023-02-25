@@ -11,17 +11,28 @@ mongoose.connect(url)
     console.log('connected to MongoDB');
   })
   .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message);
+    console.log('error connecting to MongoDB:', error.message);p
   });
 
 // Schema defines the shape of the documents in the collection
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Name is required.'],
     minlength: 3
   },
-  number: String
+  number: {
+    type: String,
+    required: [true, 'Number is required.'],
+    minlength: [8, 'Number must be at least 8 digits.'],
+    validate: {
+      validator: function(v) { // v for value of number field
+        // Two parts: 2-3 digits followed by at least 6 digits (because min length is 8)
+        return /\d{2,3}-\d{6,}/.test(v);
+      },
+      message: props => `${props.value} is not a valid phone number.`
+    }
+  }
 });
 
 personSchema.set('toJSON', {
