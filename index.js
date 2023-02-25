@@ -6,7 +6,7 @@ const Person = require('./models/person')
 const cors = require('cors')
 const morgan = require('morgan')
 
-// Middleware 
+// Middleware
 app.use(express.static('build')) // Serve static files from the build folder
 app.use(cors()) // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json()) // Parse JSON data in the request body
@@ -16,7 +16,7 @@ morgan.token('body', function (req) {
   return JSON.stringify(req.body)
 })
 
-app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body")) // Custom HTTP request logger
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body')) // Custom HTTP request logger
 
 // Custom middleware
 // const requestLogger = (request, response, next) => {
@@ -28,39 +28,6 @@ app.use(morgan(":method :url :status :res[content-length] - :response-time ms :b
 // }
 
 // app.use(requestLogger)
-
-let persons = [
-  { 
-    "id": 1,
-    "name": "Arto Hellas", 
-    "number": "040-123456"
-  },
-  { 
-    "id": 2,
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
-  },
-  { 
-    "id": 3,
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
-  },
-  { 
-    "id": 4,
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
-  },
-  {
-    "id": 5,
-    "name": "Jark Manzer",
-    "number": "123-456-7890"
-  },
-  {
-    "id": 6,
-    "name": "Oleg Gordievsky",
-    "number": "098-765-4321"
-  }
-]
 
 // Root route (Overriden by build middleware which serves index.html)
 app.get('/', (request, response) => {
@@ -129,15 +96,11 @@ app.get('/api/persons/:id', (request, response, next) => {
 // }
 
 // Generate a new id (random number between 1 and 1000000)
-const generateId = () => {
-  // From: Math.floor(Math.random() * (max - min + 1)) + min
-  return Math.floor(Math.random() * 1000000) + 1 // Inclusive of maximum
-}
 
 // Create a new resource in the collection
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  
+
   // // Check for missing name
   // if (!body.name) {
   //   return response.status(400).json({
@@ -181,7 +144,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     request.params.id,
     { name, number },
     { new: true, runValidators: true, context: 'query' } // Return updated person and run validators
-  ) 
+  )
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
@@ -191,12 +154,12 @@ app.put('/api/persons/:id', (request, response, next) => {
 // Delete a single resource in the collection
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       // Return 204 No Content whether or not resource was found
       response.status(204).end()
     })
     .catch(error => next(error))
-      
+
   // const id = Number(request.params.id)
   // persons = persons.filter(person => person.id !== id)
 
